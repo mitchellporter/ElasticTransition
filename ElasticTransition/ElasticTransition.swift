@@ -338,7 +338,15 @@ public class ElasticTransition: EdgePanTransition, UIGestureRecognizerDelegate{
       frontView.frame.origin.y = max(cc.center.y, lc.center.y)
       shadowMaskLayer.frame = CGRectMake(0, lc.center.y, size.width, size.height - lc.center.y)
     case .Top:
+    
+        
       frontView.frame.origin.y = min(cc.center.y, lc.center.y) - contentLength
+      print("subviewz: \(frontView.subviews)")
+      
+      
+      for subview in frontView.subviews {
+        subview.frame.origin.y = min(cc.center.y, lc.center.y) - contentLength
+      }
       shadowMaskLayer.frame = CGRectMake(0, 0, size.width, lc.center.y)
     }
     shadowMaskLayer.dragPoint = shadowMaskLayer.convertPoint(cc.center, fromLayer: container.layer)
@@ -414,6 +422,10 @@ public class ElasticTransition: EdgePanTransition, UIGestureRecognizerDelegate{
       contentLength = vcl
     }
     
+    // Up
+    print(frontViewController) // settings
+    print(backViewController) // navigation
+    
     // 2. setup shadow and background view
     shadowView.frame = container.bounds
     if let frontViewBackgroundColor = frontViewBackgroundColor{
@@ -422,7 +434,12 @@ public class ElasticTransition: EdgePanTransition, UIGestureRecognizerDelegate{
       let rootVC = vc.childViewControllers.last{
         shadowMaskLayer.fillColor = rootVC.view.backgroundColor?.CGColor
     }else{
-      shadowMaskLayer.fillColor = frontView.backgroundColor?.CGColor
+//      shadowMaskLayer.fillColor = UIColor.redColor().CGColor
+//      shadowMaskLayer.fillColor = UIColor(red:0.945,  green:0.800,  blue:0.012, alpha:1).CGColor
+//      shadowMaskLayer.fillColor = frontView.backgroundColor?.CGColor
+//        shadowMaskLayer.fillColor = UIColor.redColor().CGColor
+        shadowMaskLayer.fillColor = UIColor.whiteColor().CGColor
+
     }
     shadowMaskLayer.edge = edge.opposite()
     shadowMaskLayer.radiusFactor = radiusFactor
@@ -433,7 +450,7 @@ public class ElasticTransition: EdgePanTransition, UIGestureRecognizerDelegate{
     overlayView.frame = container.bounds
     overlayView.backgroundColor = overlayColor
     overlayView.addGestureRecognizer(backgroundExitPanGestureRecognizer)
-    container.addSubview(overlayView)
+//    container.addSubview(overlayView)
     
     // 4. setup front view
     var rect = container.bounds
@@ -446,6 +463,7 @@ public class ElasticTransition: EdgePanTransition, UIGestureRecognizerDelegate{
     frontView.frame = rect
     if navigation{
       frontViewController.navigationController?.view.addGestureRecognizer(navigationExitPanGestureRecognizer)
+        
     }else{
       frontView.addGestureRecognizer(foregroundExitPanGestureRecognizer)
     }
